@@ -1,27 +1,27 @@
 version: "3.8"
 services:
   postgres:
-    container_name: postgres-quicktldr-db
+    container_name: postgres-phraseplay-db
     command: ["postgres", "-c", "log_statement=all"]
     image: postgres:14
     ports:
-      - "5455:5432"
+      - "5465:5432"
     restart: always
     volumes:
-      - postgres_quicktldr_data:/var/lib/postgresql/data
+      - postgres_phraseplay_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_HOST_AUTH_METHOD: trust
 
   postgres-test-db:
-    container_name: postgres-quicktldr-test-db
+    container_name: postgres-phraseplay-test-db
     image: postgres:14
     ports:
-      - "5456:5432"
+      - "5466:5432"
     restart: always
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_HOST_AUTH_METHOD: trust
 
 volumes:
-  postgres_quicktldr_data:
+  postgres_phraseplay_data:

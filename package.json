@@ -7,22 +7,34 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "db:init": "run-s db:generate db:migrate:reset db:migrate:deploy",
+    "db:generate": "prisma generate",
+    "dbs": "prisma generate; prisma studio",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:reset": "prisma migrate reset --force",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:dev:readonly": "prisma migrate dev --create-only",
+    "db:prisma:proxy": "prisma generate --data-proxy",
+    "db:push": "prisma db push",
+    "db:seed": ""
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.5",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^4.12.0",
     "@tanstack/react-query": "^4.28.0",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "install": "^0.13.0",
     "next": "^13.2.4",
     "next-auth": "4.20.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.12.2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-prisma": "^0.5.4"
   },
   "devDependencies": {
     "@types/eslint": "^8.21.3",

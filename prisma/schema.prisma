@@ -6,13 +6,25 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  // relationMode = "foreignKeys"
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
 }
+
+generator zod {
+  provider              = "zod-prisma"
+  output                = "../src/models"
+  relationModel         = false
+  modelCase             = "PascalCase"
+  modelSuffix           = ""
+  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+  useDecimalJs          = true
+  // imports                  = null
+  prismaJsonNullability = true
+  // prismaJsonNullability = false
+}
+
+
 
 model Example {
     id        String   @id @default(cuid())
