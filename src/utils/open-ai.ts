@@ -1,4 +1,6 @@
 import { OpenAIApi, Configuration } from "openai";
+import { AxiosError } from "axios";
+import { TRPCError } from "@trpc/server";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -10,9 +12,18 @@ export const openAi = new OpenAIApi(configuration);
 const PROMPT =
   "Can you translate this sentence to traditional Mandarin and segment the words? Also, please provide a translation, max of 3 translations per word, include the word, pronunciation, and translation. Provide a response in JSON format (return only a json response) and lowercase the keys";
 
+type SegmentedSentence = {
+  sentence: string;
+  translation: string;
+  segments: {
+    pronunciation: string;
+    word: string;
+    translation: string[];
+  };
+};
 export const getSegmentedSentence = async (
   sentence: string
-): Promise<Record<string, unknown> | null> => {
+): Promise<SegmentedSentence> => {
   try {
     const response = await openAi.createChatCompletion({
       model,
@@ -21,8 +32,21 @@ export const getSegmentedSentence = async (
 
     return JSON.parse(
       String(response.data.choices?.[0]?.message?.content ?? "{}")
-    ) as Record<string, unknown>;
+    ) as SegmentedSentence;
   } catch (e) {
-    return null;
+    if (e instanceof AxiosError) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "ChatGPT returned an error: " + e?.message,
+      });
+    }
+
+    throw new TRPCError({
+      code: "PARSE_ERROR",
+      message: `Could not parse response from ChatGPT: ${
+        // bad; can we get TS to handle this?
+        (e as Error)?.message ?? "Unknown error"
+      }`,
+    });
   }
 };

@@ -27,19 +27,10 @@ export const exampleRouter = createTRPCRouter({
   getSegmentedSentence: publicProcedure
     .input(z.object({ sentence: z.string() }))
     .query(async ({ input }) => {
-      try {
-        const translation = await getSegmentedSentence(input.sentence);
+      const translation = await getSegmentedSentence(input.sentence);
 
-        return {
-          translation,
-        };
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred, please try again later.",
-          // optional: pass the original error to retain stack trace
-          cause: error,
-        });
-      }
+      return {
+        translation,
+      };
     }),
 });
