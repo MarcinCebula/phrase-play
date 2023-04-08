@@ -28,6 +28,8 @@ model Sentence {
     // id        String   @id @default(cuid())
     sentenceUID String @id @unique //hash of the sentence, just make everything lower case and replace space with underscore
     sentence String //actual sentence
+    pinyin String
+    translatedDirection String
     words Json @default("[]") //will hold the array for words and their corresponding data (translations, audio, etc.)
 }
 

@@ -9,5 +9,7 @@ const jsonSchema: z.ZodSchema<Json> = z.lazy(() => z.union([literalSchema, z.arr
 export const Sentence = z.object({
   sentenceUID: z.string(),
   sentence: z.string(),
+  pinyin: z.string(),
+  translatedDirection: z.string(),
   words: jsonSchema,
 })
