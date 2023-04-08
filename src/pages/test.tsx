@@ -4,12 +4,10 @@ import { api } from "~/utils/api";
 const Test = () => {
   const mutation = api.example.createAnki.useMutation();
 
-  useEffect(() => {
-    mutation.mutate({
-      sentence: "Hello, World",
-      translationDirection: "EnglishToChinese",
-    });
-  }, []);
+  mutation.mutate({
+    sentence: "Hello, World",
+    translationDirection: "EnglishToChinese",
+  });
 
   console.log(mutation.data);
 
