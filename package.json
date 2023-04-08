@@ -27,6 +27,8 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "daisyui": "^2.51.5",
+    "i": "^0.3.7",
     "install": "^0.13.0",
     "next": "^13.2.4",
     "next-auth": "4.20.1",
