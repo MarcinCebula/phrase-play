@@ -1,11 +1,6 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { getSegmentedSentence } from "~/utils/open-ai";
 
 export const exampleRouter = createTRPCRouter({
@@ -27,8 +22,11 @@ export const exampleRouter = createTRPCRouter({
     });
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  getSecretMessage: publicProcedure.query(({}) => {
+    return {
+      hello: "you can now see this secret message!",
+      secretMessage: "you can now see this secret message!",
+    };
   }),
   getSegmentedSentence: publicProcedure
     .input(z.object({ sentence: z.string() }))
