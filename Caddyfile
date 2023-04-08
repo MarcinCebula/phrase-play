@@ -1,0 +1,8 @@
+http://quicktldr.lab {
+	redir https://{host}{uri}
+}
+
+https://phraseplay.lab https://*.phraseplay.lab {
+	tls ../certs/phraseplay.lab+4.pem ../certs/phraseplay.lab+4-key.pem
+	reverse_proxy 127.0.0.1:3000
+}
