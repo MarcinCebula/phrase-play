@@ -1,11 +1,17 @@
+import { useEffect } from "react";
 import { api } from "~/utils/api";
 
 const Test = () => {
-  const query = api.example.getSegmentedSentence.useQuery({
-    sentence: "Hello, do you know what time the train will come?",
-  });
+  const mutation = api.example.createAnki.useMutation();
 
-  console.log(query);
+  useEffect(() => {
+    mutation.mutate({
+      sentence: "Hello, World",
+      translationDirection: "EnglishToChinese",
+    });
+  }, []);
+
+  console.log(mutation.data);
 
   return <span>Hello, World:</span>;
 };

@@ -10,8 +10,14 @@ const configuration = new Configuration({
 export const model = "gpt-3.5-turbo-0301";
 export const openAi = new OpenAIApi(configuration);
 
-const PROMPT =
-  "Can you translate this sentence to traditional Mandarin and segment the words? Also, please provide a translation, max of 3 translations per word, include the word, pronunciation, and translation. Provide a response in JSON format (return only a json response) and lowercase the keys";
+const PROMPT = `Can you translate this sentence to traditional Mandarin and segment the words? Also, please provide a translation, max of 3 translations per word, include the word, pronunciation, and translation. Provide a response in JSON format (return only a json response) and lowercase the keys in the format
+  sentence: string;
+  translation: string;
+  segments: {
+    pronunciation: string;
+    word: string;
+    translation: string[];
+  }[]: `;
 
 type SegmentedSentence = {
   sentence: string;
@@ -30,6 +36,8 @@ export const getSegmentedSentence = async (
       model,
       messages: [{ role: "user", content: `${PROMPT}: ${sentence}` }],
     });
+
+    console.log(response.data.choices?.[0]?.message);
 
     return JSON.parse(
       String(response.data.choices?.[0]?.message?.content ?? "{}")

@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { nanoid } from "nanoid";
+import Input from "~/interfaces/input";
+import type Word from "~/interfaces/word";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { getSegmentedSentence } from "~/utils/open-ai";
@@ -29,13 +32,28 @@ export const exampleRouter = createTRPCRouter({
       secretMessage: "you can now see this secret message!",
     };
   }),
-  getSegmentedSentence: publicProcedure
-    .input(z.object({ sentence: z.string() }))
-    .query(async ({ input }) => {
-      const translation = await getSegmentedSentence(input.sentence);
+  createAnki: publicProcedure.input(Input).mutation(async ({ input, ctx }) => {
+    const translation = await getSegmentedSentence(input.sentence);
+    const result = await ctx.prisma.sentence.create({
+      data: {
+        sentence: translation.sentence,
+        pinyin: translation.sentence,
+        translatedDirection: input.translationDirection,
+        sentenceUID: nanoid(),
+        words: translation.segments?.map(
+          (segment) =>
+            ({
+              original: segment.word,
+              pinyin: segment.pronunciation,
+              translated: segment.translation,
+              audioFileUrl: "",
+            } as Word)
+        ),
+      },
+    });
 
-      return {
-        translation,
-      };
-    }),
+    return {
+      sentence: result,
+    };
+  }),
 });
