@@ -19,7 +19,7 @@ type SegmentedSentence = {
     pronunciation: string;
     word: string;
     translation: string[];
-  };
+  }[];
 };
 export const getSegmentedSentence = async (
   sentence: string
