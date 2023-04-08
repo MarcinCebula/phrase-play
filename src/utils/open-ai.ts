@@ -1,9 +1,10 @@
 import { OpenAIApi, Configuration } from "openai";
 import { AxiosError } from "axios";
 import { TRPCError } from "@trpc/server";
+import { env } from "process";
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: env.OPENAI_API_KEY,
 });
 
 export const model = "gpt-3.5-turbo-0301";
