@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -5,6 +6,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { getSegmentedSentence } from "~/utils/open-ai";
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -16,10 +18,19 @@ export const exampleRouter = createTRPCRouter({
     }),
 
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    return ctx.prisma.sentence.findMany();
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
+  getSegmentedSentence: publicProcedure
+    .input(z.object({ sentence: z.string() }))
+    .query(async ({ input }) => {
+      const translation = await getSegmentedSentence(input.sentence);
+
+      return {
+        translation,
+      };
+    }),
 });
