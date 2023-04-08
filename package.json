@@ -3,7 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "run-s dbbuild:1-generate dbbuild:2-migrate nextbuild",
+    "dbuild": "run-s ddbbuild:1-generate ddbbuild:2-migrate nextbuild",
+    "nextbuild": "next build",
+    "ddbbuild:1-generate": "prisma generate",
+    "ddbbuild:2-migrate": "prisma migrate deploy",
+    "db:build": "run-s dbbuild:1-generate dbbuild:2-migrate dbbuild:3-tsup",
+    "dbbuild:1-generate": "DATABASE_URL=\"$DATABASE_MIGRATION_URL\" prisma generate",
+    "dbbuild:2-migrate": "DATABASE_URL=\"$DATABASE_MIGRATION_URL\" prisma migrate deploy",
+    "dbbuild:3-tsup": "tsup",
+    "dbbuild:4-build": "next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
@@ -42,6 +51,7 @@
     "zustand": "^4.3.7"
   },
   "devDependencies": {
+    "npm-run-all": "^4.1.5",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",
     "@types/prettier": "^2.7.2",

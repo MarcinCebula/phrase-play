@@ -7,7 +7,7 @@ function HomeFeature() {
       <LanguagePicker />
       <PhraseBox />
       <Loader />
-      {/* <Sentances /> */}
+      <Sentances />
     </div>
   );
 }
@@ -49,16 +49,16 @@ export const PhraseBox = () => {
   );
 };
 
-// export const Sentances = () => {
-//   const { data, isLoading } = api.example.getAll();
+export const Sentances = () => {
+  const { data, isLoading } = api.example.getAll.useQuery();
 
-//   if (isLoading) {
-//     return <div className="flex flex-col">loading...</div>;
-//   }
-//   return (
-//     <div className="">
-//       <h1>data: {JSON.stringify(data)}</h1>
-//     </div>
-//   );
-// };
+  if (isLoading) {
+    return <div className="flex flex-col">loading...</div>;
+  }
+  return (
+    <div className="">
+      <h1>data: {JSON.stringify(data)}</h1>
+    </div>
+  );
+};
 export default HomeFeature;

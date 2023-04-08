@@ -12,14 +12,15 @@ export const exampleRouter = createTRPCRouter({
       };
     }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.sentence.findMany({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const resp = await ctx.prisma.sentence.findMany({
       select: {
         sentenceUID: true,
         sentence: true,
         words: true,
       },
     });
+    return resp;
   }),
 
   getSecretMessage: publicProcedure.query(({}) => {
