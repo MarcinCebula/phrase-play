@@ -34,12 +34,12 @@ export const exampleRouter = createTRPCRouter({
   }),
   createAnki: publicProcedure.input(Input).mutation(async ({ input, ctx }) => {
     const translation = await getSegmentedSentence(input.sentence);
-    const result = await ctx.prisma.sentence.create({
-      data: {
+    const result = await ctx.prisma.sentence.upsert({
+      create: {
         sentence: translation.sentence,
         pinyin: translation.sentence,
         translatedDirection: input.translationDirection,
-        sentenceUID: nanoid(),
+        sentenceUID: translation.sentence.toLowerCase().replace(/\s/g, "_"),
         words: translation.segments?.map(
           (segment) =>
             ({
@@ -49,6 +49,17 @@ export const exampleRouter = createTRPCRouter({
               audioFileUrl: "",
             } as Word)
         ),
+      },
+      update: {},
+      where: {
+        sentenceUID: translation.sentence.toLowerCase().replace(/\s/g, "_"),
+      },
+      select: {
+        sentenceUID: true,
+        pinyin: true,
+        sentence: true,
+        words: true,
+        translatedDirection: true,
       },
     });
 
