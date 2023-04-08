@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -5,6 +6,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { getSegmentedSentence } from "~/utils/open-ai";
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -22,4 +24,22 @@ export const exampleRouter = createTRPCRouter({
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
+  getSegmentedSentence: publicProcedure
+    .input(z.object({ sentence: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const translation = await getSegmentedSentence(input.sentence);
+
+        return {
+          translation,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          // optional: pass the original error to retain stack trace
+          cause: error,
+        });
+      }
+    }),
 });
