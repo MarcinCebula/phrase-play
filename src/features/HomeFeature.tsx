@@ -1,28 +1,14 @@
 import React, { createContext, useContext } from "react";
-
-// type Props = {};
-
-// type LanguageContextType = {
-//   language: "EnglishToChinese" | "ChineseToEnglish";
-//   setLanguage: (language: "EnglishToMandarin" | "MandarinToEnglish") => void;
-// };
-
-// const LanguageContext = createContext<LanguageContextType>({
-//   language: "EnglishToChinese",
-//   setLanguage: () => { },
-// });
+import { api } from "~/utils/api";
 
 function HomeFeature() {
   return (
-    // <LanguageContext.Provider
-    //   value={{ language: "EnglishToMandarin" }}
-    // >
     <div className="flex flex-col items-center justify-center px-4 py-12">
       <LanguagePicker />
       <PhraseBox />
       <Loader />
+      <Sentances />
     </div>
-    // </LanguageContext.Provider>
   );
 }
 
@@ -41,15 +27,6 @@ export const Loader = () => {
   );
 };
 export const LanguagePicker = () => {
-  // const languageContext = useContext(LanguageContext);
-
-  // const onChangeLanguage = () => {
-  //   languageContext.languageDirection.console.log(
-  //     "change",
-  //     languageContext.languageDirection
-  //   );
-  // };
-
   return (
     <div className="flex flex-col pb-2">
       <span>Mandarin to English</span>
@@ -60,12 +37,6 @@ export const LanguagePicker = () => {
 export const PhraseBox = () => {
   return (
     <div className="flex w-full flex-col">
-      {/* <label
-        htmlFor="message"
-        className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-      >
-        Your message
-      </label> */}
       <textarea
         id="message"
         lang="tw"
@@ -74,6 +45,19 @@ export const PhraseBox = () => {
         className="block w-full rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-sm text-gray-900 ring-0 active:ring-0"
         placeholder="Enter the sentence you'd like to translate and practice..."
       ></textarea>
+    </div>
+  );
+};
+
+export const Sentances = () => {
+  const { data, isLoading } = api.example.getAll();
+
+  if (isLoading) {
+    return <div className="flex flex-col">loading...</div>;
+  }
+  return (
+    <div className="">
+      <h1>data: {JSON.stringify(data)}</h1>
     </div>
   );
 };
