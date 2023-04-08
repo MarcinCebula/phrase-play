@@ -17,5 +17,5 @@ https://phraseplay.com
   key: ../certs/phraseplay.lab+4-key.pem
 
 ```
-deplay: 1
+deplay: 2
 
