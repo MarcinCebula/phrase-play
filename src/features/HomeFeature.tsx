@@ -223,7 +223,7 @@ export const Card = ({ words, currentWord, sentence }: CardProps) => {
     const word = words[currentWord] as Word;
     return (
       <div className="flex w-full flex-col space-y-2">
-        <div className="flex h-20 w-full flex-col items-center justify-between rounded-md bg-blue-50 px-2 py-4 text-center shadow-md">
+        <div className="flex min-h-16 w-full flex-col items-center justify-between rounded-md bg-blue-50 px-2 py-4 text-center shadow-md">
           <div className="text-lg">{sentence}</div>
           <div className="text-sm text-blue-600">
             {words.map((word) => word.original).join("")}
