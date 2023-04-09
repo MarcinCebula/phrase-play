@@ -12,4 +12,6 @@ export const Sentence = z.object({
   pinyin: z.string(),
   translatedDirection: z.string(),
   words: jsonSchema,
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
