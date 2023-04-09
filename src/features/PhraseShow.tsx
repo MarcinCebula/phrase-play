@@ -1,28 +1,50 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import Link from "next/link";
 import React, { createContext, useContext, useRef, useState } from "react";
 import JoinTheProject from "~/components/JoinTheProject";
 import Word from "~/interfaces/word";
 import { api } from "~/utils/api";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+} from "next";
 
-function HomeFeature() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+interface Props {
+  id: string;
+}
+
+const PhraseShow = ({ id }: Props) => {
+  console.log({ id });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isShowingCard, setIsShowingCard] = useState<boolean>(false);
   const [data, setData] = useState<SentenceType | null>(null);
   const [words, setWords] = useState<Word[]>([]);
   const [currentWord, setCurrentWord] = useState<number>(0);
+
+  api.example.getPhrases.useQuery(
+    { uid: id },
+    {
+      onSuccess: (data) => {
+        setIsLoading(false);
+        setWords(data.words);
+        setData(data as SentenceType);
+        setIsShowingCard(true);
+      },
+    }
+  );
 
   return (
     <div className="flex w-full flex-col lg:rounded-lg lg:bg-white/20 lg:px-2 lg:py-4">
       <div className="grid grid-cols-12 gap-y-4 lg:gap-x-12 lg:gap-y-0 lg:px-2">
         <div className="col-span-12 flex flex-col space-y-2 lg:col-span-6">
           <div className="flex flex-col items-center justify-start rounded-md bg-blue-50 px-2 py-4 text-center shadow-md">
-            <PhraseBox
-              setIsLoading={setIsLoading}
-              setWords={setWords}
-              setData={setData}
-              setIsShowingCard={setIsShowingCard}
-              isShowingCard={isShowingCard}
-            />
+            <a
+              href="/"
+              className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md border border-blue-200 bg-white px-6 text-center font-light text-blue-600 hover:border-blue-500"
+            >
+              Create Anki Card
+            </a>
           </div>
           {isLoading && <Loader />}
           {isShowingCard && (
@@ -78,7 +100,7 @@ function HomeFeature() {
       </div>
     </div>
   );
-}
+};
 
 export const Loader = () => {
   return (
@@ -103,75 +125,6 @@ export const LanguagePicker = () => {
       <span>Mandarin to English</span>
     </div>
   );
-};
-
-type PhraseBoxProps = {
-  setIsLoading: (state: boolean) => void;
-  setWords: (words: Word[]) => void;
-  setData: (data: SentenceType) => void;
-  setIsShowingCard: (state: boolean) => void;
-  isShowingCard: boolean;
-};
-export const PhraseBox = ({
-  setIsLoading,
-  setWords,
-  setData,
-  setIsShowingCard,
-  isShowingCard,
-}: PhraseBoxProps) => {
-  const textBox = useRef<null | HTMLTextAreaElement>(null);
-  const mutation = api.example.createAnki.useMutation();
-
-  const onCreateAnkiCard = () => {
-    console.log({ textBox: textBox.current });
-    mutation.mutate({
-      sentence: textBox?.current?.value as string,
-      translationDirection: "EnglishToChinese",
-    });
-  };
-
-  if (mutation.isLoading) {
-    setIsLoading(true);
-  }
-  if (mutation.data) {
-    setIsLoading(false);
-    setWords(mutation.data.sentence.words as Word[]);
-    setData(mutation.data.sentence as SentenceType);
-    setIsShowingCard(true);
-  }
-
-  if (isShowingCard) {
-    return (
-      // eslint-disable-next-line @next/next/no-html-link-for-pages
-      <a
-        href="/"
-        className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md border border-blue-200 bg-white px-6 text-center font-light text-blue-600 hover:border-blue-500"
-      >
-        Create Anki Card
-      </a>
-    );
-  } else {
-    return (
-      <div className="flex w-full flex-col space-y-2">
-        <LanguagePicker />
-        <textarea
-          ref={textBox}
-          id="message"
-          lang="tw"
-          rows={4}
-          maxLength={100}
-          className="block w-full rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-sm text-gray-900 ring-0 active:ring-0"
-          placeholder="Enter the sentence you'd like to translate and practice..."
-        ></textarea>
-        <button
-          onClick={onCreateAnkiCard}
-          className="flex h-12 w-full cursor-pointer items-center justify-center rounded-md bg-blue-500 px-6 text-center  text-white hover:bg-blue-600"
-        >
-          Create Anki Card
-        </button>
-      </div>
-    );
-  }
 };
 
 export const Phrases = () => {
@@ -277,7 +230,8 @@ export const Card = ({ words, currentWord, sentence }: CardProps) => {
   }
   return <div></div>;
 };
-export default HomeFeature;
+
+export default PhraseShow;
 
 type SentenceType = {
   pinyin: string;

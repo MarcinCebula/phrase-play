@@ -13,6 +13,7 @@ const server = z.object({
       : z.string().min(1).optional(),
   NEXTAUTH_URL: z.string(),
   OPENAI_API_KEY: z.string().min(1),
+  GA_MEASUREMENT_ID: z.string().optional(),
 });
 
 /**
@@ -35,6 +36,7 @@ const processEnv = {
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  GA_MEASUREMENT_ID: process.env.GA_MEASUREMENT_ID,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

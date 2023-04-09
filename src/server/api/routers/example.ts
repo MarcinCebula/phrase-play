@@ -17,6 +17,7 @@ export const exampleRouter = createTRPCRouter({
 
   getAllPhrases: publicProcedure.query(async ({ ctx }) => {
     const resp = await ctx.prisma.sentence.findMany({
+      take: 10,
       orderBy: [
         {
           createdAt: "desc",
@@ -34,6 +35,26 @@ export const exampleRouter = createTRPCRouter({
       words: Word[];
     }[];
   }),
+
+  getPhrases: publicProcedure
+    .input(z.object({ uid: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const resp = await ctx.prisma.sentence.findFirst({
+        where: {
+          sentenceUID: input.uid,
+        },
+        select: {
+          sentenceUID: true,
+          sentence: true,
+          words: true,
+        },
+      });
+      return resp as unknown as {
+        sentenceUID: string;
+        sentence: string;
+        words: Word[];
+      };
+    }),
 
   getSecretMessage: publicProcedure.query(({}) => {
     return {
