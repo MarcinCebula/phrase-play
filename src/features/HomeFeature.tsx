@@ -100,7 +100,7 @@ export const Loader = () => {
 export const LanguagePicker = () => {
   return (
     <div className="flex flex-col pb-2">
-      <span>Mandarin to English</span>
+      <span>English to Mandarin</span>
     </div>
   );
 };
