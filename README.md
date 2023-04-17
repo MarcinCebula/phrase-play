@@ -27,4 +27,4 @@ Master Mandarin or English at your own pace by creating custom Anki cards with s
   key: ../certs/phraseplay.lab+4-key.pem
 
 ```
-deplay: 3
+deplay: 4
